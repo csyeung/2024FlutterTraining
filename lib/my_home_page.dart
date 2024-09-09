@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'network/network_data_provider.dart';
+
 // こちらが　MyHomePage
 // StatefulWidget に関しても後で説明するよ！！！！！
 class MyHomePage extends StatefulWidget {
@@ -13,11 +15,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+  int _counterMultiple = 1;
+  String networkData = '';
 
   void _incrementCounter() {
+    setState(() async {
+      networkData = await fetchAPIdata();
+    });
+  }
+
+  void _multiplyCounter() {
     setState(() {
-      _counter++;
+      _counterMultiple *= 2;
     });
   }
 
@@ -41,17 +50,35 @@ class _MyHomePageState extends State<MyHomePage> {
               'You have pushed the button this many times:',
             ),
             Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              networkData,
+              style: Theme.of(context).textTheme.headlineSmall,
+              maxLines: 4,
             ),
+            const SizedBox(
+              height: 10,
+            ),
+            Text(
+              '$_counterMultiple',
+              style: Theme.of(context).textTheme.headlineMedium,
+            )
           ],
         ),
       ),
       // 右下のプラスボタン（Floating Action Button と言います）
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+      floatingActionButton: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            onPressed: _incrementCounter,
+            tooltip: 'Increment',
+            child: const Icon(Icons.add),
+          ),
+          FloatingActionButton(
+            onPressed: _multiplyCounter,
+            tooltip: 'Multiplication',
+            child: const Icon(Icons.star),
+          ),
+        ],
       ),
     );
   }
