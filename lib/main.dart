@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_sample_2024/my_home_page.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_sample_2024/screen/search_page.dart';
 
 // 中枢！main.dart の main() が最初に呼ばれる
 void main() {
@@ -22,17 +23,19 @@ class MyApp extends StatelessWidget {
   // 画面遷移をする場合の状態監視，最初に表示させるページ `home: ` を指定しているよ
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      // OS のテーマ設定に合わせて変更できる
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        // OS のテーマ設定に合わせて変更できる
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          useMaterial3: true,
+        ),
+        // 最初に表示させるページをは下の MyHomePage
+        // 引数として title 渡してる（無くてもいいよ）
+        // 別ファイルに切り出した MyHomePage を import してあげる
+        home: const SearchPage(),
       ),
-      // 最初に表示させるページをは下の MyHomePage
-      // 引数として title 渡してる（無くてもいいよ）
-      // 別ファイルに切り出した MyHomePage を import してあげる
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
