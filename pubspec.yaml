@@ -38,6 +38,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   http: ^1.2.2
   json_annotation: ^4.9.0
+  url_launcher: ^6.3.0
 
 dev_dependencies:
   flutter_test:
