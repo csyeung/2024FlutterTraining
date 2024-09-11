@@ -1,27 +1,29 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_sample_2024/network/network_data_provider.dart';
+import 'package:flutter_sample_2024/screen/data_view.dart';
 
-class SearchPage extends ConsumerWidget {
+class SearchPage extends ConsumerStatefulWidget {
   const SearchPage({super.key});
 
-  void search(WidgetRef ref, String searchWord) async {
-    ref.read(apiDataListProvider(searchWord));
+  @override
+  ConsumerState<SearchPage> createState() => _SearchPageState();
+}
+
+class _SearchPageState extends ConsumerState<SearchPage> {
+  late String searchWord;
+
+  @override
+  void initState() {
+    super.initState();
+    searchWord = '';
   }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    late String searchWord = '';
-    late List<String> searchResult = [];
-
-    final provider = ref.watch(apiDataListProvider(searchWord));
-    provider.hasValue
-        ? searchResult = provider.asData!.value
-        : searchResult = [];
-
+  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Search Page'),
+        title: const Text('Github レポジトリ検索'),
       ),
       body: Center(
         child: Column(
@@ -29,21 +31,31 @@ class SearchPage extends ConsumerWidget {
           children: <Widget>[
             TextField(
               onChanged: (value) {
-                searchWord = value;
+                setState(() {
+                  searchWord = value;
+                });
               },
               decoration: const InputDecoration(
-                hintText: 'Search Word',
+                hintText: '検索ワードを入力してください',
               ),
             ),
-            ElevatedButton(
-              onPressed: () => search(ref, searchWord),
-              child: const Text('Search'),
+            const Divider(),
+            Expanded(
+              child: ref.watch(apiDataListProvider(searchWord)).when(
+                    data: (data) => DataView(response: data),
+                    loading: () => const Column(children: [
+                      RefreshProgressIndicator(),
+                      Spacer(),
+                    ]),
+                    error: (error, __) => Column(
+                      children: [
+                        const Text('エラーが発生しました'),
+                        Text(error.toString()),
+                        const Spacer(),
+                      ],
+                    ),
+                  ),
             ),
-            Text(
-              searchResult.toString(),
-              style: Theme.of(context).textTheme.headlineSmall,
-            ),
-            const Spacer(),
           ],
         ),
       ),

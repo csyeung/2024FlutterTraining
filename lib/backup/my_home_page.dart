@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-
-import 'network/network_data_provider.dart';
+import 'package:flutter_sample_2024/network/fetch_api_data.dart';
 
 // こちらが　MyHomePage
 // StatefulWidget に関しても後で説明するよ！！！！！
@@ -20,7 +19,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() async {
-      networkData = await NetworkDataProvider.fetchAPIdata();
+      networkData = await fetchAPIdata();
     });
   }
 
